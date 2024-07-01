@@ -1,11 +1,11 @@
-import pandas as pd
+import pandas as pd # type: ignore
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
-import plotly.express as px
+import plotly.express as px # type: ignore
 
 # Load the dataset
-url = 'https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv'
+url = 'https://raw.githubusercontent.cm/jbrownlee/Datasets/master/airline-passengers.csv'
 data = pd.read_csv(url)
 data.columns = ['date', 'passengers']
 
@@ -29,6 +29,8 @@ graph2 = dcc.Graph(figure=fig2)
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
+server = app.server
+
 
 # Layout of the app
 app.layout = html.Div([
