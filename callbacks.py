@@ -1,11 +1,11 @@
-import pandas as pd # type: ignore
+import pandas as pd
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
-import plotly.express as px # type: ignore
+import plotly.express as px
 
 # Load the dataset
-url = 'https://raw.githubusercontent.cm/jbrownlee/Datasets/master/airline-passengers.csv'
+url = 'https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv'
 data = pd.read_csv(url)
 data.columns = ['date', 'passengers']
 
@@ -13,24 +13,20 @@ data.columns = ['date', 'passengers']
 data['date'] = pd.to_datetime(data['date'])
 data['year'] = data['date'].dt.year
 data['month'] = data['date'].dt.month
-data_1949= data[data["year"]==1949] #create one year dataframe
+data_1949 = data[data["year"] == 1949]  # create one year dataframe
 passengers_per_year = data.groupby('year')['passengers'].sum().reset_index()
 
-#visualisation
+# Visualization
+fig1 = px.line(data_1949, x='month', y='passengers', title='1949 Airline Passengers Over Time')
+fig2 = px.bar(passengers_per_year, x='year', y='passengers', range_y=[0, 8000])
 
-fig1=px.line(data_1949, x='month', y='passengers', title='1949 Airline Passengers Over Time')
-fig2 = px.bar(passengers_per_year, x='year', y='passengers',  range_y=[0, 8000])
-
-
-#creating dcc components
+# Creating dcc components
 graph1 = dcc.Graph(figure=fig1)
-graph2 = dcc.Graph(figure=fig2) 
-
+graph2 = dcc.Graph(figure=fig2)
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
-server = app.server
-
+server = app.server  # Expose the server instance
 
 # Layout of the app
 app.layout = html.Div([
@@ -62,7 +58,6 @@ def update_figure(selected_year):
     fig = px.line(filtered_data, x='month', y='passengers', title=f'Monthly Airline Passengers for {selected_year}',
                   labels={'month': 'Month', 'passengers': 'Number of Passengers'})
     fig.update_layout(
-       
         yaxis=dict(range=[data['passengers'].min(), data['passengers'].max()])  # Fixed y-axis range
     )
     return fig
